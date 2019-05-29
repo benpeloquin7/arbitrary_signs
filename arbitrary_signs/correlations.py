@@ -63,13 +63,13 @@ def get_vocab_sample(model, n=500):
     vocab_words_2 = np.array(list(model.keys()))
     vector_repr = np.array(list(model.values()))
 
-    idxs = np.random.choice(range(len(vocab_words_1)), n)
+    idxs = np.random.choice(range(len(vocab_words_1)), size=n)
     words_sample = vocab_words_1[idxs]
     words_sample_random = vocab_words_2[idxs]
-    vector_sample = vector_repr[idxs, :]
+    vector_sample = vector_repr[idxs]
     np.random.shuffle(words_sample_random)
     # Basic check on randomization
-    # assert words_sample[0] != words_sample_random[0]
+    assert words_sample[0] != words_sample_random[0]
     return vector_sample, words_sample, words_sample_random
 
 
