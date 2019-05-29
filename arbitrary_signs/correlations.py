@@ -10,15 +10,14 @@ from scipy.spatial.distance import cosine
 import tqdm
 from urllib.request import urlopen
 
-from arbitrary_signs import url_base
+from arbitrary_signs import url_base, valid_language_exts
 from arbitrary_signs.utils import make_safe_dir
 
 logging.getLogger().setLevel(logging.INFO)
 
 
 def create_url(ext, base):
-    valid_languages = ["ar", "es", "en", "de"]
-    if ext not in valid_languages:
+    if ext not in valid_language_exts:
         raise Exception("{} is bad language extension.")
     return base.format(ext)
 
