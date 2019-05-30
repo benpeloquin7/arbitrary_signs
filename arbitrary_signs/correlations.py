@@ -25,6 +25,7 @@ def create_url(ext, base):
 def language_typ_from_url(url):
     return url[-6:-4]
 
+
 def fasttext_fp_creator(language, out_dir):
     return os.path.join(out_dir, "{}_data.pickle".format(language))
 
