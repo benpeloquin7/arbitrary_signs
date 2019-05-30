@@ -1,5 +1,6 @@
 """correlations"""
 
+from collections import defaultdict
 import itertools as it
 from Levenshtein import distance as levenshtein
 import logging
@@ -199,6 +200,37 @@ if __name__ == "__main__":
         download_fasttext_data(url, check_dir=True, out_dir=args.out_dir)
 
     cache_fasttext_data(data, language_ext, args.out_dir)
+
+    dists = defaultdict(dict)
+    sim_type = "real"
+    for batch in tqdm.tqdm(range(args.n_samples)):
+        (w1, w2), (v1, v2) = create_pairs(data, args.sample_size)
+        # Real vals
+        word_dists = get_dists(w1, w2, levenshtein)
+        vec_dists = get_dists(v1, v2, cosine)
+        dists[batch]["real_word_dists"] = word_dists
+        dists[batch]["real_vector_dists"] = vec_dists
+        # Permuted vals
+        shuffle_idxs = np.random.choice(range(len(w1)), args.sample_size)
+        dists[batch]["random_word_dists"] = \
+            get_dists(w1[shuffle_idxs], w2, levenshtein)
+        # Store words
+        dists[batch]["real_word_pairs"] = list(zip(w1, w2))
+        dists[batch]["shuffle_idxs"] = shuffle_idxs
+
+    # FP is language-#samples-samplesize
+    # Example:
+    #     >>> 'ru_1000_10000.pickle'
+    dists_fp = os.path.join(args.out_dir, "{}_{}_{}_dists.pickle".format(
+        args.language_ext, args.n_samples, args.sample_size))
+    logging.info("Dumping simulations to {}".format(dists_fp))
+    with open(dists_fp, "wb") as fp:
+        pickle.dump(dists, fp)
+
+
+
+
+
 
     import pdb; pdb.set_trace();
 
