@@ -18,7 +18,7 @@ logging.getLogger().setLevel(logging.INFO)
 
 def create_url(ext, base):
     if ext not in valid_language_exts:
-        raise Exception("{} is bad language extension.")
+        raise Exception("{} is bad language extension.".format(ext))
     return base.format(ext)
 
 
